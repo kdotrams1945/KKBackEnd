@@ -13,6 +13,7 @@ public class CorsConfig {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
+               // https://kkbackend-production-d38e.up.railway.app/swagger-ui/index.html#/bmi-calculator/calculateBMI
                 registry.addMapping("/**") // Adjust if needed
                         .allowedOrigins("https://kk-dashboard-production.up.railway.app/",
                                 "http://kk-dashboard-production.up.railway.app/")
