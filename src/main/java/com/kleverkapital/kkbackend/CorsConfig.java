@@ -14,7 +14,8 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**") // Adjust if needed
-                        .allowedOrigins("https://kk-dashboard-production.up.railway.app")
+                        .allowedOrigins("https://kk-dashboard-production.up.railway.app/",
+                                "http://kk-dashboard-production.up.railway.app/")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*");
             }
