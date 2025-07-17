@@ -49,11 +49,5 @@ public class ProfitResult {
         setProfit3(values.get(2));
     }
 
-//    public Map<Integer, Double> getProfits() {
-//        return profits;
-//    }
-//
-//    public void setProfits(Map<Integer, Double> profits) {
-//        this.profits = profits;
-//    }
+
 }

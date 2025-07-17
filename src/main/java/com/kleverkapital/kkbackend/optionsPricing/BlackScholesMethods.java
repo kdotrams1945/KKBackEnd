@@ -26,25 +26,23 @@ public class BlackScholesMethods {
     public static double callPrice(double stockPrice, double strikePrice, double timeToExpiry,
                                    double riskFreeRate, double volatility) {
 
+        return price(stockPrice, strikePrice, timeToExpiry, riskFreeRate, volatility, true);
+    }
+
+    private static double price(double stockPrice, double strikePrice, double timeToExpiry, double riskFreeRate, double volatility, boolean isCall) {
         return AnalyticFormulas.blackScholesOptionValue(
                 stockPrice,
                 riskFreeRate,
                 volatility,
                 timeToExpiry,
-                strikePrice, true
+                strikePrice, isCall
         );
     }
 
     public static double putPrice(double stockPrice, double strikePrice, double timeToExpiry,
                                   double riskFreeRate, double volatility) {
 
-        return AnalyticFormulas.blackScholesOptionValue(
-                stockPrice,
-                riskFreeRate,
-                volatility,
-                timeToExpiry,
-                strikePrice, false
-        );
+        return price(stockPrice, strikePrice, timeToExpiry, riskFreeRate, volatility, false);
     }
 
 

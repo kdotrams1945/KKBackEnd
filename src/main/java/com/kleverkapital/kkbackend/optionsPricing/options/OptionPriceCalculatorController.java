@@ -22,18 +22,18 @@ public class OptionPriceCalculatorController {
     private static final double SIGMA_LOW_FACTOR = 0.5;
     private static final double SIGMA_HIGH_FACTOR = 2.0;
 
-    @GetMapping("/call-option-price")
-    public double calculateCallOptionPrice(double stockPrice,
-                                           double strikePrice,
-                                           double yearlyInterestRate,
-                                           int daysUntilExpiry,
-                                           double sigma) {
-        return BlackScholesMethods.callPrice(stockPrice,
-                strikePrice,
-                daysUntilExpiry / DAYS_IN_YEAR,
-                yearlyInterestRate,
-                sigma);
-    }
+//    @GetMapping("/call-option-price")
+//    public double calculateCallOptionPrice(double stockPrice,
+//                                           double strikePrice,
+//                                           double yearlyInterestRate,
+//                                           int daysUntilExpiry,
+//                                           double sigma) {
+//        return BlackScholesMethods.callPrice(stockPrice,
+//                strikePrice,
+//                daysUntilExpiry / DAYS_IN_YEAR,
+//                yearlyInterestRate,
+//                sigma);
+//    }
 
     @GetMapping("/option-analysis")
     public OptionProfitResult[] analyzeOptionProfit(double stockPrice,
