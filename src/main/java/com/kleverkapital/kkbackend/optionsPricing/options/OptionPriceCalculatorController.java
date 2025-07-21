@@ -6,6 +6,7 @@ import com.kleverkapital.kkbackend.optionsPricing.ProfitLossCalculator;
 import com.kleverkapital.kkbackend.optionsPricing.ProfitResult;
 import com.kleverkapital.kkbackend.optionsPricing.model.CallOptionInvestment;
 import com.kleverkapital.kkbackend.optionsPricing.model.PutOptionInvestment;
+import net.finmath.functions.AnalyticFormulas;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,6 +36,11 @@ public class OptionPriceCalculatorController {
 //                sigma);
 //    }
 
+    public static record OptionGreeks( double delta,double vega,
+                                       double theta,double rho, double gamma){
+
+    }
+
     @GetMapping("/option-analysis")
     public OptionProfitResult[] analyzeOptionProfit(double stockPrice,
                                                     double yearlyInterestRate,
@@ -57,7 +63,29 @@ public class OptionPriceCalculatorController {
                 profitResult.setProfit3(profitResult.getProfit3() + stockProfit);
             }
         }
+
+        results[0].setGreeks(calculateGreeks(stockPrice, yearlyInterestRate,
+                sigma, input1));
+        results[1].setGreeks(calculateGreeks(stockPrice, yearlyInterestRate,
+                sigma, input2));
         return results;
+    }
+
+    private OptionGreeks calculateGreeks(double stockPrice, double yearlyInterestRate, double sigma, OptionInput optionInput1) {
+        var spot = stockPrice;
+        var riskFreeRate = yearlyInterestRate;
+        var volatility = sigma;
+        var maturity = optionInput1.getDaysUntilExpiry()/365.0;
+        var strike = optionInput1.getStrikePrice();
+        double delta = AnalyticFormulas.blackScholesOptionDelta(spot,riskFreeRate,
+                volatility, maturity,
+                strike);
+        double vega = AnalyticFormulas.blackScholesOptionVega(spot,riskFreeRate, volatility, maturity, strike);
+        double gamma = AnalyticFormulas.blackScholesOptionGamma(spot, riskFreeRate, volatility, maturity, strike);
+        double theta = AnalyticFormulas.blackScholesOptionTheta(spot,  riskFreeRate, volatility, maturity, strike);
+        double rho = AnalyticFormulas.blackScholesOptionRho(spot,  riskFreeRate, volatility, maturity, strike);
+        OptionGreeks greek1 = new OptionGreeks(delta, vega, theta, rho, gamma);
+        return greek1;
     }
 
     private OptionProfitResult resultWithDifferentExpiries(double stockPrice,
