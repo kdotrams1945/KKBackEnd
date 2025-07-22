@@ -3,8 +3,8 @@ package com.kleverkapital.kkbackend.optionsPricing;
 
 import com.kleverkapital.kkbackend.optionsPricing.model.CallOptionInvestment;
 import com.kleverkapital.kkbackend.optionsPricing.model.OptionInvestment;
+import com.kleverkapital.kkbackend.optionsPricing.model.OptionProfitResult;
 import com.kleverkapital.kkbackend.optionsPricing.model.PutOptionInvestment;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,20 +38,20 @@ public class ProfitLossCalculator {
         throw new IllegalArgumentException("Invalid investment type");
     }
 
-    public List<Pair<Double, Double>> getProfitRanges(OptionInvestment investment
-            , double currentStockPrice) {
-
-        double price = currentStockPrice;
-        var increment = InvestmentUtilities.getIncrement(price);
-        int ranges = 10;
-        List<Pair<Double, Double>> profits = new ArrayList<>();
-        for (int i = -1 * ranges; i < ranges; i++) {
-            double currentPrice = price + (increment * i);
-            profits.add(Pair.of(currentPrice,
-                    investment.calculateProfit(currentPrice)));
-        }
-        return profits;
-    }
+//    public List<Pair<Double, Double>> getProfitRanges(OptionInvestment investment
+//            , double currentStockPrice) {
+//
+//        double price = currentStockPrice;
+//        var increment = InvestmentUtilities.getIncrement(price);
+//        int ranges = 10;
+//        List<Pair<Double, Double>> profits = new ArrayList<>();
+//        for (int i = -1 * ranges; i < ranges; i++) {
+//            double currentPrice = price + (increment * i);
+//            profits.add(Pair.of(currentPrice,
+//                    investment.calculateProfit(currentPrice)));
+//        }
+//        return profits;
+//    }
 
     public OptionProfitResult calculateOptionProfitResultsWithMultiSigma(OptionInvestment option,
                                                                          double riskfreeRate,

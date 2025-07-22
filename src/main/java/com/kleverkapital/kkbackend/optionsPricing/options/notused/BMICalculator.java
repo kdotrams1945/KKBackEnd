@@ -1,4 +1,4 @@
-package com.kleverkapital.kkbackend;
+package com.kleverkapital.kkbackend.optionsPricing.options.notused;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;

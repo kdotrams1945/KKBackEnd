@@ -1,4 +1,4 @@
-package com.kleverkapital.kkbackend.optionsPricing.options;
+package com.kleverkapital.kkbackend.optionsPricing.model;
 
 
 import com.fasterxml.jackson.annotation.JsonTypeName;

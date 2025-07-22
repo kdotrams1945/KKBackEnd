@@ -1,4 +1,4 @@
-package com.kleverkapital.kkbackend.optionsPricing;
+package com.kleverkapital.kkbackend.optionsPricing.options.notused;
 
 
 import net.finmath.time.TenorFromArray;

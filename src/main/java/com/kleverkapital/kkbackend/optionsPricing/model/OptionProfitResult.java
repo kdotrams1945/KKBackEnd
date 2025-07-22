@@ -1,13 +1,13 @@
-package com.kleverkapital.kkbackend.optionsPricing;
+package com.kleverkapital.kkbackend.optionsPricing.model;
 
 
-import com.kleverkapital.kkbackend.optionsPricing.options.OptionPriceCalculatorController;
+import com.kleverkapital.kkbackend.optionsPricing.ProfitResult;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class OptionProfitResult {
-    private OptionPriceCalculatorController.OptionGreeks greeks;
+    //private OptionGreeks greeks;
 
     public OptionProfitResult(List<String> labels) {
         this.labels = labels;
@@ -60,11 +60,12 @@ public class OptionProfitResult {
         setResults(newResults);
     }
 
-    public void setGreeks(OptionPriceCalculatorController.OptionGreeks greeks) {
-        this.greeks = greeks;
-    }
-
-    public OptionPriceCalculatorController.OptionGreeks getGreeks() {
-        return greeks;
-    }
+//    public void setGreeks(OptionGreeks greeks) {
+//        this.greeks = greeks;
+//    }
+//
+//    public OptionGreeks getGreeks() {
+//        return greeks;
+//    }
 }
+

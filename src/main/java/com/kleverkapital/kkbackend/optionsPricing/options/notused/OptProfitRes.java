@@ -1,4 +1,4 @@
-package com.kleverkapital.kkbackend.optionsPricing.options;
+package com.kleverkapital.kkbackend.optionsPricing.options.notused;
 
 
 import java.util.*;

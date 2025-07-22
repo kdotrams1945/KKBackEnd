@@ -34,7 +34,7 @@ public class CallOptionInvestment implements OptionInvestment {
     }
 
     private final double strikePrice;
-    double initialPrice;
+
 
     // todo: lets calculate premiumPaid : option price calculator.
 

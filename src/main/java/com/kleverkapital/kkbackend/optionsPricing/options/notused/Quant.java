@@ -1,12 +1,10 @@
-package com.kleverkapital.kkbackend.optionsPricing;
+package com.kleverkapital.kkbackend.optionsPricing.options.notused;
 
 import org.jquantlib.QL;
 import org.jquantlib.Settings;
 import org.jquantlib.daycounters.Actual365Fixed;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.exercise.AmericanExercise;
-import org.jquantlib.exercise.BermudanExercise;
-import org.jquantlib.exercise.EuropeanExercise;
 import org.jquantlib.exercise.Exercise;
 
 import org.jquantlib.instruments.Option;
@@ -20,15 +18,11 @@ import org.jquantlib.methods.lattices.Joshi4;
 import org.jquantlib.methods.lattices.LeisenReimer;
 import org.jquantlib.methods.lattices.Tian;
 import org.jquantlib.methods.lattices.Trigeorgis;
-import org.jquantlib.pricingengines.AnalyticEuropeanEngine;
 import org.jquantlib.pricingengines.vanilla.BaroneAdesiWhaleyApproximationEngine;
 import org.jquantlib.pricingengines.vanilla.BinomialVanillaEngine;
 import org.jquantlib.pricingengines.vanilla.BjerksundStenslandApproximationEngine;
-import org.jquantlib.pricingengines.vanilla.IntegralEngine;
 import org.jquantlib.pricingengines.vanilla.JuQuadraticApproximationEngine;
 import org.jquantlib.pricingengines.vanilla.finitedifferences.FDAmericanEngine;
-import org.jquantlib.pricingengines.vanilla.finitedifferences.FDBermudanEngine;
-import org.jquantlib.pricingengines.vanilla.finitedifferences.FDEuropeanEngine;
 import org.jquantlib.processes.BlackScholesMertonProcess;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
@@ -41,8 +35,6 @@ import org.jquantlib.termstructures.yieldcurves.FlatForward;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.Month;
-import org.jquantlib.time.Period;
-import org.jquantlib.time.TimeUnit;
 import org.jquantlib.time.calendars.Target;
 
 

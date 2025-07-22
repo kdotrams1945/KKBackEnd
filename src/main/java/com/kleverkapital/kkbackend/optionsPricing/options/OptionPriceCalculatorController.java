@@ -1,11 +1,7 @@
 package com.kleverkapital.kkbackend.optionsPricing.options;
 
-import com.kleverkapital.kkbackend.optionsPricing.BlackScholesMethods;
-import com.kleverkapital.kkbackend.optionsPricing.OptionProfitResult;
-import com.kleverkapital.kkbackend.optionsPricing.ProfitLossCalculator;
-import com.kleverkapital.kkbackend.optionsPricing.ProfitResult;
-import com.kleverkapital.kkbackend.optionsPricing.model.CallOptionInvestment;
-import com.kleverkapital.kkbackend.optionsPricing.model.PutOptionInvestment;
+import com.kleverkapital.kkbackend.optionsPricing.*;
+import com.kleverkapital.kkbackend.optionsPricing.model.*;
 import net.finmath.functions.AnalyticFormulas;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,13 +32,8 @@ public class OptionPriceCalculatorController {
 //                sigma);
 //    }
 
-    public static record OptionGreeks( double delta,double vega,
-                                       double theta,double rho, double gamma){
-
-    }
-
     @GetMapping("/option-analysis")
-    public OptionProfitResult[] analyzeOptionProfit(double stockPrice,
+    public OptionAnalysisResult analyzeOptionProfit(double stockPrice,
                                                     double yearlyInterestRate,
                                                     double sigma,
                                                     OptionInputWrapper wrapper) {
@@ -57,18 +48,21 @@ public class OptionPriceCalculatorController {
             var r = optionResult.getResults();
             for (ProfitResult profitResult : r) {
                 double price = profitResult.getPrice();
-                double stockProfit = wrapper.quantity * (price - stockPrice);
+                double stockProfit = wrapper.getQuantity() * (price - stockPrice);
                 profitResult.setProfit1(profitResult.getProfit1() + stockProfit);
                 profitResult.setProfit2(profitResult.getProfit2() + stockProfit);
                 profitResult.setProfit3(profitResult.getProfit3() + stockProfit);
             }
         }
-
-        results[0].setGreeks(calculateGreeks(stockPrice, yearlyInterestRate,
-                sigma, input1));
-        results[1].setGreeks(calculateGreeks(stockPrice, yearlyInterestRate,
-                sigma, input2));
-        return results;
+        var result = new OptionAnalysisResult();
+        result.setResults(results);
+        var greeks = new OptionGreeks[2];
+        greeks[0]  = calculateGreeks(stockPrice, yearlyInterestRate,
+             sigma, input1);
+        greeks[1] = calculateGreeks(stockPrice, yearlyInterestRate,
+              sigma, input2);
+        result.setGreeks(greeks);
+        return result;
     }
 
     private OptionGreeks calculateGreeks(double stockPrice, double yearlyInterestRate, double sigma, OptionInput optionInput1) {
@@ -94,12 +88,12 @@ public class OptionPriceCalculatorController {
                                                            OptionInput input1,
                                                            OptionInput input2) {
         int d = DEFAULT_MIN_DAYS;
-        if (input1.contracts != 0 && input2.contracts != 0) {
-            d = Math.min(input1.daysUntilExpiry, input2.daysUntilExpiry);
-        } else if (input1.contracts != 0) {
-            d = input1.daysUntilExpiry;
-        } else if (input2.contracts != 0) {
-            d = input2.daysUntilExpiry;
+        if (input1.getContracts() != 0 && input2.getContracts() != 0) {
+            d = Math.min(input1.getDaysUntilExpiry(), input2.getDaysUntilExpiry());
+        } else if (input1.getContracts() != 0) {
+            d = input1.getDaysUntilExpiry();
+        } else if (input2.getContracts() != 0) {
+            d = input2.getDaysUntilExpiry();
         } else {
             throw new IllegalArgumentException("Are you crazy!");
         }
@@ -150,8 +144,8 @@ public class OptionPriceCalculatorController {
                                                                    List<Double> sigma,
                                                                    OptionInput input1) {
         return input1.getType().equals("Put")
-                ? putResultWithMultiSigma(stockPrice, yearlyInterestRate, sigma, input1, input1.daysUntilExpiry)
-                : callResultWithMultiSigma(stockPrice, yearlyInterestRate, sigma, input1, input1.daysUntilExpiry);
+                ? putResultWithMultiSigma(stockPrice, yearlyInterestRate, sigma, input1, input1.getDaysUntilExpiry())
+                : callResultWithMultiSigma(stockPrice, yearlyInterestRate, sigma, input1, input1.getDaysUntilExpiry());
     }
 
     private OptionProfitResult putResult(double stockPrice,
@@ -160,11 +154,11 @@ public class OptionPriceCalculatorController {
                                          OptionInput input,
                                          List<Integer> ranges) {
         double premiumPaid = BlackScholesMethods.putPrice(stockPrice,
-                input.strikePrice,
-                input.daysUntilExpiry / DAYS_IN_YEAR,
+                input.getStrikePrice(),
+                input.getDaysUntilExpiry() / DAYS_IN_YEAR,
                 yearlyInterestRate,
                 sigma);
-        var option = new PutOptionInvestment(input.strikePrice, premiumPaid, input.contracts);
+        var option = new PutOptionInvestment(input.getStrikePrice(), premiumPaid, input.getContracts());
         return new ProfitLossCalculator().calculateOptionProfitResults(option, yearlyInterestRate, sigma, ranges, stockPrice);
     }
 
@@ -174,11 +168,11 @@ public class OptionPriceCalculatorController {
                                           OptionInput input,
                                           List<Integer> ranges) {
         double premiumPaid = BlackScholesMethods.callPrice(stockPrice,
-                input.strikePrice,
-                input.daysUntilExpiry / DAYS_IN_YEAR,
+                input.getStrikePrice(),
+                input.getDaysUntilExpiry() / DAYS_IN_YEAR,
                 yearlyInterestRate,
                 sigma);
-        var option = new CallOptionInvestment(input.strikePrice, premiumPaid, input.contracts);
+        var option = new CallOptionInvestment(input.getStrikePrice(), premiumPaid, input.getContracts());
         return new ProfitLossCalculator().calculateOptionProfitResults(option, yearlyInterestRate, sigma, ranges, stockPrice);
     }
 
@@ -188,11 +182,11 @@ public class OptionPriceCalculatorController {
                                                         OptionInput input,
                                                         int daysUntilExpiry) {
         double premiumPaid = BlackScholesMethods.callPrice(stockPrice,
-                input.strikePrice,
+                input.getStrikePrice(),
                 daysUntilExpiry / DAYS_IN_YEAR,
                 yearlyInterestRate,
                 sigma.get(1));
-        var option = new CallOptionInvestment(input.strikePrice, premiumPaid, input.contracts);
+        var option = new CallOptionInvestment(input.getStrikePrice(), premiumPaid, input.getContracts());
         return new ProfitLossCalculator().calculateOptionProfitResultsWithMultiSigma(option, yearlyInterestRate, sigma, daysUntilExpiry, stockPrice);
     }
 
@@ -202,11 +196,11 @@ public class OptionPriceCalculatorController {
                                                        OptionInput input,
                                                        int daysUntilExpiry) {
         double premiumPaid = BlackScholesMethods.putPrice(stockPrice,
-                input.strikePrice,
+                input.getStrikePrice(),
                 daysUntilExpiry / DAYS_IN_YEAR,
                 yearlyInterestRate,
                 sigma.get(1));
-        var option = new PutOptionInvestment(input.strikePrice, premiumPaid, input.contracts);
+        var option = new PutOptionInvestment(input.getStrikePrice(), premiumPaid, input.getContracts());
         return new ProfitLossCalculator().calculateOptionProfitResultsWithMultiSigma(option, yearlyInterestRate, sigma, daysUntilExpiry, stockPrice);
     }
 }
