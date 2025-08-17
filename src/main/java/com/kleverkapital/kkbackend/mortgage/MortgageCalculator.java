@@ -14,6 +14,8 @@ public class MortgageCalculator {
 
     public static final int PAYMENTS_PER_YEAR = 12;
 
+
+
     @GetMapping("/monthlyPayment")
     public double calculateMonthlyPayment(double loan,
                                           double yearlyInterestRate,
